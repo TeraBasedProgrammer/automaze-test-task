@@ -1,0 +1,13 @@
+# Python ignore
+__pycache__/
+.env
+.env.prod
+env/
+
+# Js ignore
+
+
+
+# Other files
+.vscode/
+Makefile
