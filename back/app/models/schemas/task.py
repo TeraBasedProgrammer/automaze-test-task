@@ -20,3 +20,7 @@ class TaskBaseSchema(BaseModel):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail='The "priority" field can only contain an integer from 1 to 10',
             )
+        
+
+class TaskUpdateSchema(TaskBaseSchema):
+    title: Optional[str]
