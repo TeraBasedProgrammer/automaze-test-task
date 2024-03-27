@@ -24,3 +24,7 @@ class TaskBaseSchema(BaseModel):
 
 class TaskUpdateSchema(TaskBaseSchema):
     title: Optional[str]
+
+
+class TaskSchema(TaskBaseSchema):
+    id: int
