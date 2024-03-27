@@ -5,9 +5,12 @@ services:
   web:
     build: 
       dockerfile: back/Dockerfile
-    command: sh -c "uvicorn app.main:app --reload --host '0.0.0.0'"
+    command: >
+      sh -c "alembic upgrade head &&
+            uvicorn app.main:app --reload --host '0.0.0.0'"
     volumes:
       - ./back/app:/code/app
+      - ./back/migrations:/code/migrations
     ports:
       - 8000:8000
     env_file:

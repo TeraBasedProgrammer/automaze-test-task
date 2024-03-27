@@ -5,13 +5,13 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /code
 
-COPY ["./back/requirements.txt", "./"]
+COPY ["./back/requirements.txt", "./back/alembic.ini", "./"]
 
 RUN pip install --no-cache-dir -r requirements.txt  
 
 COPY ./back/app/ ./app/
 
-# COPY ./migrations ./migrations 
+COPY ./back/migrations ./migrations 
 
 COPY ./back/entrypoint.sh .
 RUN chmod +x /code/entrypoint.sh
