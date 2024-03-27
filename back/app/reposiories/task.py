@@ -18,6 +18,6 @@ class TaskRepository(BaseRepository):
     async def update_task(self, task_id: int, task_data: TaskUpdateSchema) -> Task:
         updated_task: Task = await self.update(task_id, task_data)
         return updated_task
-    
+
     async def delete_task(self, task_id: int) -> None:
         await self.delete(task_id)
