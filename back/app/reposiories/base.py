@@ -1,7 +1,8 @@
-from typing import Any, Type
+from typing import Any, Type, Iterable
+from itertools import chain
 
 from pydantic import BaseModel
-from sqlalchemy import delete, update
+from sqlalchemy import delete, update, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import Select
 
@@ -13,6 +14,20 @@ class BaseRepository:
 
     def __init__(self, async_session: AsyncSession):
         self.async_session = async_session
+
+    def unpack(self, collection: Iterable) -> list:
+        return list(chain.from_iterable(collection))
+
+    async def exists(self, query: Select) -> bool:
+        query = query.with_only_columns(self.model.id)
+        response = await self.async_session.execute(query)
+
+        result = response.first()
+        return bool(result)
+
+    async def exists_by_id(self, instance_id: int) -> bool:
+        query = select(self.model).where(self.model.id == instance_id)
+        return await self.exists(query)
 
     async def create(self, model_data: Type[BaseModel]) -> Type[Base]:
         new_instance = self.model(**model_data.model_dump())
