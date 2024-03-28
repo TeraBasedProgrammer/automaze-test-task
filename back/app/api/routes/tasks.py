@@ -10,9 +10,12 @@ task_router = APIRouter(prefix="/tasks")
 
 @task_router.get("/get_all/", response_model=list[TaskSchema])
 async def get_tasks(
-    search: str = "", sort: str = "desc", tasks_service: TaskService = Depends(get_tasks_service)
+    search: str = "",
+    sort: str = "desc",
+    filter: str = "all",
+    tasks_service: TaskService = Depends(get_tasks_service),
 ) -> list[TaskSchema]:
-    return await tasks_service.get_tasks(search, sort)
+    return await tasks_service.get_tasks(search, sort, filter)
 
 
 @task_router.post("/add/", response_model=None, status_code=201)

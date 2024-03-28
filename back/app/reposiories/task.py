@@ -12,13 +12,25 @@ class TaskRepository(BaseRepository):
         new_task: Task = await self.create(task_data)
         return new_task.id
 
-    async def get_tasks(self, search_query: str, sort_string: str) -> list[Task]:
+    async def get_tasks(
+        self, search_query: str, sort_string: str, filter: str
+    ) -> list[Task]:
         sort_order: UnaryExpression = (
             Task.priority.asc() if sort_string == "asc" else Task.priority.desc()
         )
-        
+
+        tasks_filter: bool = (
+            Task.is_done == True
+            if filter == "done"
+            else Task.is_done == False
+            if filter == "undone"
+            else True
+        )
+
         query: Select = (
-            select(Task).where(Task.title.icontains(search_query)).order_by(sort_order)
+            select(Task)
+            .where((Task.title.icontains(search_query)) & tasks_filter)
+            .order_by(sort_order)
         )
         return self.unpack(await self.get_many(query))
 

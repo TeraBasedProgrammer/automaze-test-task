@@ -16,9 +16,11 @@ class TaskService:
                 detail="Task with this id is not found",
             )
 
-    async def get_tasks(self, search_query: str, sort_string: str) -> list[TaskSchema]:
+    async def get_tasks(
+        self, search_query: str, sort_string: str, filter: str
+    ) -> list[TaskSchema]:
         tasks: list[Task] = await self.task_repository.get_tasks(
-            search_query, sort_string
+            search_query, sort_string, filter
         )
         return [
             TaskSchema(
