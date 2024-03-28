@@ -2,8 +2,8 @@ version: '3.8'
 
 
 services:
-  web:
-    build: 
+  back:
+    build:
       dockerfile: back/Dockerfile
     command: >
       sh -c "alembic upgrade head &&
@@ -19,6 +19,14 @@ services:
       - local
     depends_on:
       - postgres
+  
+  front:
+    build: 
+      dockerfile: front/Dockerfile
+    volumes:
+        - ./front/:/front/
+    ports:
+      - "3000:3000"
       
   postgres:
     image: postgres
