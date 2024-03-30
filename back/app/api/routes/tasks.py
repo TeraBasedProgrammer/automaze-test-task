@@ -30,12 +30,12 @@ async def add_task(
     return await tasks_service.add_task(task_data)
 
 
-@task_router.patch("/{task_id}/update/", response_model=None)
+@task_router.patch("/{task_id}/update/", response_model=TaskSchema)
 async def update_task(
     task_id: int,
     task_data: TaskUpdateSchema,
     tasks_service: TaskService = Depends(get_tasks_service),
-) -> None:
+) -> TaskSchema:
     return await tasks_service.update_task(task_id, task_data)
 
 

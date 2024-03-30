@@ -41,9 +41,18 @@ class TaskService:
         new_task_id: Task = await self.task_repository.create_task(task_data)
         return TaskCreateResponse(id=new_task_id)
 
-    async def update_task(self, task_id: int, task_data: TaskUpdateSchema) -> None:
+    async def update_task(
+        self, task_id: int, task_data: TaskUpdateSchema
+    ) -> TaskSchema:
         await self._validate_task_exists(task_id)
-        await self.task_repository.update_task(task_id, task_data)
+        updated_task: Task = await self.task_repository.update_task(task_id, task_data)
+
+        return TaskSchema(
+            id=updated_task.id,
+            title=updated_task.title,
+            priority=updated_task.priority,
+            is_done=updated_task.is_done,
+        )
 
     async def delete_task(self, task_id: int) -> None:
         await self._validate_task_exists(task_id)
