@@ -1,8 +1,13 @@
 from fastapi import HTTPException, status
 
-from app.reposiories.task import TaskRepository
 from app.models.db.task import Task
-from app.models.schemas.task import TaskSchema, TaskBaseSchema, TaskUpdateSchema
+from app.models.schemas.task import (
+    TaskBaseSchema,
+    TaskCreateResponse,
+    TaskSchema,
+    TaskUpdateSchema,
+)
+from app.reposiories.task import TaskRepository
 
 
 class TaskService:
@@ -32,12 +37,22 @@ class TaskService:
             for task in tasks
         ]
 
-    async def add_task(self, task_data: TaskBaseSchema) -> None:
-        await self.task_repository.create_task(task_data)
+    async def add_task(self, task_data: TaskBaseSchema) -> TaskCreateResponse:
+        new_task_id: Task = await self.task_repository.create_task(task_data)
+        return TaskCreateResponse(id=new_task_id)
 
-    async def update_task(self, task_id: int, task_data: TaskUpdateSchema) -> None:
+    async def update_task(
+        self, task_id: int, task_data: TaskUpdateSchema
+    ) -> TaskSchema:
         await self._validate_task_exists(task_id)
-        await self.task_repository.update_task(task_id, task_data)
+        updated_task: Task = await self.task_repository.update_task(task_id, task_data)
+
+        return TaskSchema(
+            id=updated_task.id,
+            title=updated_task.title,
+            priority=updated_task.priority,
+            is_done=updated_task.is_done,
+        )
 
     async def delete_task(self, task_id: int) -> None:
         await self._validate_task_exists(task_id)

@@ -1,7 +1,12 @@
 from fastapi import APIRouter, Depends
 
 from app.api.dependencies.services import get_tasks_service
-from app.models.schemas.task import TaskBaseSchema, TaskSchema, TaskUpdateSchema
+from app.models.schemas.task import (
+    TaskBaseSchema,
+    TaskCreateResponse,
+    TaskSchema,
+    TaskUpdateSchema,
+)
 from app.services.task import TaskService
 
 
@@ -18,19 +23,19 @@ async def get_tasks(
     return await tasks_service.get_tasks(search, sort, filter)
 
 
-@task_router.post("/add/", response_model=None, status_code=201)
+@task_router.post("/add/", response_model=TaskCreateResponse, status_code=201)
 async def add_task(
     task_data: TaskBaseSchema, tasks_service: TaskService = Depends(get_tasks_service)
-) -> None:
+) -> TaskCreateResponse:
     return await tasks_service.add_task(task_data)
 
 
-@task_router.patch("/{task_id}/update/", response_model=None)
+@task_router.patch("/{task_id}/update/", response_model=TaskSchema)
 async def update_task(
     task_id: int,
     task_data: TaskUpdateSchema,
     tasks_service: TaskService = Depends(get_tasks_service),
-) -> None:
+) -> TaskSchema:
     return await tasks_service.update_task(task_id, task_data)
 
 
