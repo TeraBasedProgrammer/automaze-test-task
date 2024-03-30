@@ -25,7 +25,7 @@ async def add_task(
     return await tasks_service.add_task(task_data)
 
 
-@task_router.patch("{task_id}/update/", response_model=None)
+@task_router.patch("/{task_id}/update/", response_model=None)
 async def update_task(
     task_id: int,
     task_data: TaskUpdateSchema,
@@ -34,7 +34,7 @@ async def update_task(
     return await tasks_service.update_task(task_id, task_data)
 
 
-@task_router.delete("{task_id}/delete/", response_model=None, status_code=204)
+@task_router.delete("/{task_id}/delete/", response_model=None, status_code=204)
 async def delete_task(
     task_id: int, tasks_service: TaskService = Depends(get_tasks_service)
 ) -> None:
