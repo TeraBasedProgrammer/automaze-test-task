@@ -24,9 +24,13 @@ services:
     build: 
       dockerfile: front/Dockerfile
     volumes:
-        - ./front/:/front/
+        - ./front:/next_app/
     ports:
       - "3000:3000"
+    networks:
+      - local
+    depends_on:
+      - back
       
   postgres:
     image: postgres

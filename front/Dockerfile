@@ -1,6 +1,6 @@
 FROM node:18
 
-WORKDIR /app
+WORKDIR /next_app
 COPY ./front/package*.json ./
 RUN npm install
 COPY ./front .
