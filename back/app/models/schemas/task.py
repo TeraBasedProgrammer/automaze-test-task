@@ -30,3 +30,6 @@ class TaskUpdateSchema(TaskBaseSchema):
 
 class TaskSchema(TaskBaseSchema):
     id: int
+
+class TaskCreateResponse(BaseModel):
+    id: int

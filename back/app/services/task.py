@@ -1,8 +1,13 @@
 from fastapi import HTTPException, status
 
-from app.reposiories.task import TaskRepository
 from app.models.db.task import Task
-from app.models.schemas.task import TaskSchema, TaskBaseSchema, TaskUpdateSchema
+from app.models.schemas.task import (
+    TaskBaseSchema,
+    TaskCreateResponse,
+    TaskSchema,
+    TaskUpdateSchema,
+)
+from app.reposiories.task import TaskRepository
 
 
 class TaskService:
@@ -32,8 +37,9 @@ class TaskService:
             for task in tasks
         ]
 
-    async def add_task(self, task_data: TaskBaseSchema) -> None:
-        await self.task_repository.create_task(task_data)
+    async def add_task(self, task_data: TaskBaseSchema) -> TaskCreateResponse:
+        new_task_id: Task = await self.task_repository.create_task(task_data)
+        return TaskCreateResponse(id=new_task_id)
 
     async def update_task(self, task_id: int, task_data: TaskUpdateSchema) -> None:
         await self._validate_task_exists(task_id)
