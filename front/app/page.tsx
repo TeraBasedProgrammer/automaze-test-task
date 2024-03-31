@@ -7,7 +7,7 @@ interface Task {
   id: number;
   title: string;
   priority: number;
-  isDone: boolean;
+  is_done: boolean;
 }
 
 export default function Home() {
@@ -64,9 +64,10 @@ export default function Home() {
           return (
             <TodoItem
               key={task.id}
+              id={task.id}
               title={task.title}
               priority={task.priority}
-              isDone={task.isDone}
+              isDone={task.is_done}
               onDelete={() => deleteTask(task.id)}
             />
           );
