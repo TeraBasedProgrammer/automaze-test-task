@@ -22,7 +22,7 @@ export default function TodoItem(props: TodoItemProps) {
   return (
     <div className="bg-violet-600 flex justify-between items-center p-2 rounded-lg shadow-md">
       <div className="flex gap-2">
-        <input type="checkbox" onChange={() => ChangeTaskState()} />
+        <input type="checkbox" checked={taskIsDone} onChange={() => ChangeTaskState()} />
         <div className={clsx('text-lg', { 'line-through': taskIsDone })}>
           {props.title} | Priority: {props.priority}
         </div>

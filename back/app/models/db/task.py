@@ -1,5 +1,3 @@
-from enum import Enum
-
 from sqlalchemy import SmallInteger
 from sqlalchemy.orm import Mapped, mapped_column
 
