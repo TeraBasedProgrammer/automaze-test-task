@@ -2,6 +2,7 @@
 import TodoItem from './ui/todo_item';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import { useDebounce } from './lib/hooks';
 
 interface Task {
   id: number;
@@ -13,9 +14,10 @@ interface Task {
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [inputText, setInputText] = useState('');
-  const [searchText, setSearchText] = useState('');
+  const [search, setSearch] = useState('');
   const [sortQuery, setSortQuery] = useState('desc');
   const [filterQuery, setFilterQuery] = useState('all');
+  const debouncedSearch = useDebounce(search);
 
   function DeleteTask(id: number) {
     axios.delete(`http://localhost:8000/tasks/${id}/delete/`).then(() => {
@@ -36,10 +38,9 @@ export default function Home() {
   }
 
   function GetData() {
-    console.log(sortQuery)
     axios
       .get(
-        `http://localhost:8000/tasks/get_all/?sort=${sortQuery}&search=${searchText}&filter=${filterQuery}`,
+        `http://localhost:8000/tasks/get_all/?sort=${sortQuery}&search=${debouncedSearch}&filter=${filterQuery}`,
       )
       .then((resp) => {
         setTasks(resp.data);
@@ -48,7 +49,7 @@ export default function Home() {
 
   useEffect(() => {
     GetData();
-  }, [sortQuery, filterQuery]);
+  }, [sortQuery, filterQuery, debouncedSearch]);
 
   return (
     <div className="flex flex-col items-center gap-8 pt-8 bg-violet-200 pb-32">
@@ -72,13 +73,13 @@ export default function Home() {
           className="text-xl rounded-md shadow-md"
           type="text"
           placeholder="Search"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
         <label htmlFor="sort">Sort by priority:</label>
         <select onChange={(e) => setSortQuery(e.target.value)} name="sort" id="sort">
-          <option value="asc">Asc</option>
           <option value="desc">Desc</option>
+          <option value="asc">Asc</option>
         </select>
         <label htmlFor="filter">Show tasks:</label>
         <select onChange={(e) => setFilterQuery(e.target.value)} name="filter" id="filter">
