@@ -1,6 +1,7 @@
 'use client';
-import TodoItem from './ui/todo_item';
-import { useEffect, useState, useRef } from 'react';
+import TodoItem from './ui/TodoItem';
+import AddTodoModal from './ui/AddTodoModal';
+import { useEffect, useState} from 'react';
 import axios from 'axios';
 import { useDebounce } from './lib/hooks';
 
@@ -13,10 +14,10 @@ interface Task {
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [inputText, setInputText] = useState('');
   const [search, setSearch] = useState('');
   const [sortQuery, setSortQuery] = useState('desc');
   const [filterQuery, setFilterQuery] = useState('all');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const debouncedSearch = useDebounce(search);
 
   function DeleteTask(id: number) {
@@ -25,14 +26,13 @@ export default function Home() {
     });
   }
 
-  function AddTask() {
-    const data = { title: `${inputText}`, is_done: false, priority: 1 };
-    if (inputText === '') {
+  function AddTask(title: string, priority: number) {
+    const data = { title: title, is_done: false, priority: priority };
+    if (title === '') {
       return;
     }
 
     axios.post('http://localhost:8000/tasks/add/', data).then(() => {
-      setInputText('');
       GetData();
     });
   }
@@ -51,23 +51,18 @@ export default function Home() {
     GetData();
   }, [sortQuery, filterQuery, debouncedSearch]);
 
+
   return (
     <div className="flex flex-col items-center gap-8 pt-8 bg-violet-200 pb-32">
       <div className="text-2xl">Todo List</div>
       <div className="flex gap-16">
         <div className="flex gap-2">
-          <input
-            className="text-xl rounded-md shadow-md"
-            type="text"
-            placeholder="Enter the task"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-          />
           <button
-            onClick={() => AddTask()}
+            onClick={() => setIsAddModalOpen(true)}
             className="text-xl shadow-md bg-blue-600 text-white hover:bg-blue-500 rounded-md px-3 py-1">
-            Add
+            New task
           </button>
+          <AddTodoModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onSubmit={AddTask} />
         </div>
         <input
           className="text-xl rounded-md shadow-md"
