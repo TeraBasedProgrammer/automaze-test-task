@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import clsx from 'clsx';
 import TodoModal from './TodoModal';
@@ -7,7 +7,7 @@ interface TodoItemProps {
   id: number;
   title: string;
   priority: number;
-  updateCallback: () => void;
+  dataCallback: () => void;
   isDone: boolean;
   onDelete: () => void;
 }
@@ -16,10 +16,16 @@ export default function TodoItem(props: TodoItemProps) {
   const [taskIsDone, setTaskIsDone] = useState(props.isDone);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  useEffect(() => {
+    props.dataCallback();
+  }, [taskIsDone]);
+
   function ChangeTaskState() {
     axios
       .patch(`http://localhost:8000/tasks/${props.id}/update/`, { is_done: !taskIsDone })
-      .then(() => setTaskIsDone(!taskIsDone));
+      .then(() => {
+        setTaskIsDone(!taskIsDone);
+      });
   }
 
   function EditTask(title: string, priority: number) {
@@ -28,7 +34,7 @@ export default function TodoItem(props: TodoItemProps) {
         title: title,
         priority: priority,
       })
-      .then(() => props.updateCallback());
+      .then(() => props.dataCallback());
   }
 
   return (

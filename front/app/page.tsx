@@ -95,7 +95,7 @@ export default function Home() {
               id={task.id}
               title={task.title}
               priority={task.priority}
-              updateCallback={() => GetData()}
+              dataCallback={() => GetData()}
               isDone={task.is_done}
               onDelete={() => DeleteTask(task.id)}
             />
