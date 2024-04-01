@@ -1,7 +1,7 @@
 'use client';
 import TodoItem from './ui/TodoItem';
-import AddTodoModal from './ui/AddTodoModal';
-import { useEffect, useState} from 'react';
+import TodoModal from './ui/TodoModal';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDebounce } from './lib/hooks';
 
@@ -51,7 +51,6 @@ export default function Home() {
     GetData();
   }, [sortQuery, filterQuery, debouncedSearch]);
 
-
   return (
     <div className="flex flex-col items-center gap-8 pt-8 bg-violet-200 pb-32">
       <div className="text-2xl">Todo List</div>
@@ -62,7 +61,12 @@ export default function Home() {
             className="text-xl shadow-md bg-blue-600 text-white hover:bg-blue-500 rounded-md px-3 py-1">
             New task
           </button>
-          <AddTodoModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onSubmit={AddTask} />
+          <TodoModal
+            mode='create'
+            isOpen={isAddModalOpen}
+            onClose={() => setIsAddModalOpen(false)}
+            onSubmit={AddTask}
+          />
         </div>
         <input
           className="text-xl rounded-md shadow-md"
@@ -91,6 +95,7 @@ export default function Home() {
               id={task.id}
               title={task.title}
               priority={task.priority}
+              updateCallback={() => GetData()}
               isDone={task.is_done}
               onDelete={() => DeleteTask(task.id)}
             />

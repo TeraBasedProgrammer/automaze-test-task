@@ -1,22 +1,34 @@
 import { useState } from 'react';
 import axios from 'axios';
 import clsx from 'clsx';
+import TodoModal from './TodoModal';
 
 interface TodoItemProps {
   id: number;
   title: string;
   priority: number;
+  updateCallback: () => void;
   isDone: boolean;
   onDelete: () => void;
 }
 
 export default function TodoItem(props: TodoItemProps) {
   const [taskIsDone, setTaskIsDone] = useState(props.isDone);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   function ChangeTaskState() {
     axios
       .patch(`http://localhost:8000/tasks/${props.id}/update/`, { is_done: !taskIsDone })
       .then(() => setTaskIsDone(!taskIsDone));
+  }
+
+  function EditTask(title: string, priority: number) {
+    axios
+      .patch(`http://localhost:8000/tasks/${props.id}/update/`, {
+        title: title,
+        priority: priority,
+      })
+      .then(() => props.updateCallback());
   }
 
   return (
@@ -28,7 +40,9 @@ export default function TodoItem(props: TodoItemProps) {
         </div>
       </div>
       <div className="flex gap-2">
-        <button className="text-xl shadow-md bg-green-600 text-white hover:bg-green-500 rounded-md px-2">
+        <button
+          onClick={() => setIsEditModalOpen(true)}
+          className="text-xl shadow-md bg-green-600 text-white hover:bg-green-500 rounded-md px-2">
           Edit
         </button>
         <button
@@ -36,6 +50,14 @@ export default function TodoItem(props: TodoItemProps) {
           className="text-xl shadow-md bg-red-600 text-white hover:bg-red-500 rounded-md px-2">
           Delete
         </button>
+        <TodoModal
+          initialPriority={props.priority}
+          initialTitle={props.title}
+          mode="update"
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSubmit={EditTask}
+        />
       </div>
     </div>
   );
