@@ -9,6 +9,20 @@ class TaskBaseSchema(BaseModel):
     is_done: Optional[bool] = None
     priority: Optional[int] = None
 
+    @field_validator("title")
+    @classmethod
+    def validate_title(cls, value):
+        if value is None:
+            return
+
+        if len(value) > 256 or len(value) < 1:
+            raise HTTPException(
+                status.HTTP_400_BAD_REQUEST,
+                detail="The task should contain from 1 to 256 characters",
+            )
+
+        return value
+
     @field_validator("priority")
     @classmethod
     def validate_priority(cls, value):
@@ -22,7 +36,7 @@ class TaskBaseSchema(BaseModel):
             )
 
         return value
-        
+
 
 class TaskUpdateSchema(TaskBaseSchema):
     title: Optional[str] = None
@@ -30,6 +44,7 @@ class TaskUpdateSchema(TaskBaseSchema):
 
 class TaskSchema(TaskBaseSchema):
     id: int
+
 
 class TaskCreateResponse(BaseModel):
     id: int
