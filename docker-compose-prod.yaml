@@ -6,12 +6,10 @@ services:
       sh -c "alembic upgrade head &&
           gunicorn app.main:app --worker-class uvicorn.workers.UvicornWorker --reload --bind=0.0.0.0:8000"
     volumes:
-      - ./back/app:/code/app
-      - ./back/migrations:/code/migrations
+      - /home/ubuntu/automaze-test-task/back/app:/code/app
+      - /home/ubuntu/automaze-test-task/back/migrations:/code/migrations
     ports:
       - 8000:8000
-    env_file:
-      - ./back/.env.prod
     networks:
       - local
     depends_on:
@@ -21,7 +19,7 @@ services:
     build: 
       dockerfile: front/Dockerfile
     volumes:
-        - ./front:/next_app/
+        - /home/ubuntu/automaze-test-task/front:/next_app/
     ports:
       - "3000:3000"
     networks:
@@ -34,8 +32,6 @@ services:
     restart: always
     ports:
       - 5432:5432
-    env_file:
-      - ./back/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
@@ -46,10 +42,10 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     networks:
       - local
-      
+
 networks:
   local:
     driver: bridge
-  
+
 volumes:
   postgres_data:
