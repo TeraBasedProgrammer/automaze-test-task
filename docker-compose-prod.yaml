@@ -22,6 +22,8 @@ services:
         - /home/ubuntu/automaze-test-task/front:/next_app/
     ports:
       - "3000:3000"
+    env_file:
+      - /home/ubuntu/automaze-test-task/back/.env.prod
     networks:
       - local
     depends_on:
@@ -32,6 +34,8 @@ services:
     restart: always
     ports:
       - 5432:5432
+    env_file:
+      - /home/ubuntu/automaze-test-task/back/.env.prod
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
