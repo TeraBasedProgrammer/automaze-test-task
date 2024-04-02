@@ -12,6 +12,8 @@ services:
       - 8000:8000
     networks:
       - local
+    env_file:
+      - /home/ubuntu/automaze-test-task/back/.env.prod
     depends_on:
       - postgres
   
@@ -22,8 +24,6 @@ services:
         - /home/ubuntu/automaze-test-task/front:/next_app/
     ports:
       - "3000:3000"
-    env_file:
-      - /home/ubuntu/automaze-test-task/back/.env.prod
     networks:
       - local
     depends_on:
