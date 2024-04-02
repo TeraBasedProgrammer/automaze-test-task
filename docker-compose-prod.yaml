@@ -20,8 +20,6 @@ services:
   front:
     build: 
       dockerfile: front/Dockerfile
-    volumes:
-        - /home/ubuntu/automaze-test-task/front:/next_app/
     ports:
       - "3000:3000"
     networks:
