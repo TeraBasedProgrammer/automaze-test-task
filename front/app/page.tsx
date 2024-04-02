@@ -21,7 +21,7 @@ export default function Home() {
   const debouncedSearch = useDebounce(search);
 
   function DeleteTask(id: number) {
-    axios.delete(`http://localhost:8000/tasks/${id}/delete/`).then(() => {
+    axios.delete(`http://ec2-18-184-95-68.eu-central-1.compute.amazonaws.com:8000/tasks/${id}/delete/`).then(() => {
       setTasks(tasks.filter((task) => task.id !== id));
     });
   }
@@ -32,7 +32,7 @@ export default function Home() {
       return;
     }
 
-    axios.post('http://localhost:8000/tasks/add/', data).then(() => {
+    axios.post('http://ec2-18-184-95-68.eu-central-1.compute.amazonaws.com:8000/tasks/add/', data).then(() => {
       GetData();
     });
   }
@@ -40,7 +40,7 @@ export default function Home() {
   function GetData() {
     axios
       .get(
-        `http://localhost:8000/tasks/get_all/?sort=${sortQuery}&search=${debouncedSearch}&filter=${filterQuery}`,
+        `http://ec2-18-184-95-68.eu-central-1.compute.amazonaws.com:8000/tasks/get_all/?sort=${sortQuery}&search=${debouncedSearch}&filter=${filterQuery}`,
       )
       .then((resp) => {
         setTasks(resp.data);

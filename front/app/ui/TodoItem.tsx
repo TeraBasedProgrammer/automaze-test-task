@@ -22,7 +22,7 @@ export default function TodoItem(props: TodoItemProps) {
 
   function ChangeTaskState() {
     axios
-      .patch(`http://localhost:8000/tasks/${props.id}/update/`, { is_done: !taskIsDone })
+      .patch(`http://ec2-18-184-95-68.eu-central-1.compute.amazonaws.com:8000/tasks/${props.id}/update/`, { is_done: !taskIsDone })
       .then(() => {
         setTaskIsDone(!taskIsDone);
       });
@@ -30,7 +30,7 @@ export default function TodoItem(props: TodoItemProps) {
 
   function EditTask(title: string, priority: number) {
     axios
-      .patch(`http://localhost:8000/tasks/${props.id}/update/`, {
+      .patch(`http://ec2-18-184-95-68.eu-central-1.compute.amazonaws.com:8000/tasks/${props.id}/update/`, {
         title: title,
         priority: priority,
       })
